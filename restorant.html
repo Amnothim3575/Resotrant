@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>67 Restaurant | Enterprise Menu Manager</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;900&family=JetBrains+Mono&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --brand-blue: #2563eb;
+            --brand-dark: #0f172a;
+        }
+
+        body { 
+            font-family: 'Outfit', sans-serif; 
+            scroll-behavior: smooth;
+            background-color: #f8fafc;
+        }
+
+        /* Custom Fancy CSS Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .animate-card {
+            animation: fadeIn 0.5s ease backwards;
+        }
+
+        .glass-sidebar {
+            background: rgba(15, 23, 42, 0.95);
+            backdrop-filter: blur(12px);
+        }
+
+        .menu-tab-active {
+            color: var(--brand-blue);
+            border-bottom: 3px solid var(--brand-blue);
+        }
+
+        .price-tag {
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        /* Custom Scrollbar for the Dashboard vibe */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #f1f1f1; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+    </style>
+</head>
+<body class="flex min-h-screen">
+
+    <aside class="fixed left-0 top-0 h-full w-64 glass-sidebar text-slate-300 z-50 hidden xl:flex flex-col">
+        <div class="p-8">
+            <div class="flex items-center space-x-3 group cursor-pointer">
+                <div class="w-12 h-12 bg-blue-600 text-white rounded-2xl flex items-center justify-center font-black text-2xl group-hover:rotate-12 transition">67</div>
+                <div class="leading-none">
+                    <span class="block text-white font-black text-xl tracking-tighter">MY 67</span>
+                    <span class="text-[10px] font-bold text-blue-400 tracking-[0.3em]">SYSTEMS</span>
+                </div>
+            </div>
+        </div>
+
+        <nav class="flex-1 px-4 space-y-2 mt-4">
+            <p class="px-4 text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-4">Core Management</p>
+            <a href="#" class="flex items-center space-x-4 p-4 rounded-2xl bg-blue-600/10 text-white border-l-4 border-blue-600">
+                <span class="text-xl">📋</span> <span class="font-semibold">Restaurant Menus</span>
+            </a>
+            <a href="#" class="flex items-center space-x-4 p-4 rounded-2xl hover:bg-white/5 transition">
+                <span class="text-xl">🏷️</span> <span class="font-semibold">Catalog Items</span>
+            </a>
+            <a href="#" class="flex items-center space-x-4 p-4 rounded-2xl hover:bg-white/5 transition">
+                <span class="text-xl">🛍️</span> <span class="font-semibold">Store Products</span>
+            </a>
+            
+            <div class="h-px bg-slate-800 my-8 mx-4"></div>
+            
+            <p class="px-4 text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-4">Operations</p>
+            <a href="#" class="flex items-center space-x-4 p-4 rounded-2xl hover:bg-white/5 transition">
+                <span class="text-xl">📅</span> <span class="font-semibold">Booking Calendar</span>
+            </a>
+            <a href="#" class="flex items-center space-x-4 p-4 rounded-2xl hover:bg-white/5 transition">
+                <span class="text-xl">📈</span> <span class="font-semibold">Sales Reports</span>
+            </a>
+        </nav>
+
+        <div class="p-6">
+            <div class="bg-slate-800/50 p-4 rounded-2xl border border-slate-700">
+                <p class="text-xs font-bold text-white mb-1">Upgrade to AI Pro</p>
+                <p class="text-[10px] text-slate-400 leading-tight mb-3">Get automated pricing and stock alerts.</p>
+                <button class="w-full py-2 bg-blue-600 text-white text-[10px] font-black uppercase rounded-lg hover:bg-blue-500">Upgrade</button>
+            </div>
+        </div>
+    </aside>
+
+    <main class="flex-1 xl:ml-64 relative">
+        
+        <header class="sticky top-0 bg-white/80 backdrop-blur-md border-b border-slate-200 px-8 py-6 flex flex-col md:flex-row md:items-center justify-between z-40 gap-4">
+            <div>
+                <h2 class="text-3xl font-black text-slate-900 tracking-tight">67 lunch and dinner</h2>
+                <p class="text-sm text-slate-500 font-medium">Active Menu Section: <span id="current-cat" class="text-blue-600">Mains</span></p>
+            </div>
+            <div class="flex items-center space-x-4">
+                <div class="relative">
+                    <input type="text" id="menuSearch" placeholder="Search menu..." class="pl-10 pr-4 py-3 bg-slate-100 rounded-full text-sm outline-none focus:ring-2 ring-blue-500 transition w-64 border border-slate-200">
+                    <span class="absolute left-4 top-3.5 opacity-40 text-xs">🔍</span>
+                </div>
+                <button class="p-3 bg-white border border-slate-200 rounded-full hover:bg-slate-50 transition">⚙️</button>
+            </div>
+        </header>
+
+        <section class="bg-white px-8 border-b border-slate-100 flex items-center space-x-12 overflow-x-auto custom-scroll">
+            <button onclick="renderMenu('Mains')" id="btn-Mains" class="py-6 text-sm font-black uppercase tracking-widest menu-tab-active transition whitespace-nowrap">Main Dishes</button>
+            <button onclick="renderMenu('Drinks')" id="btn-Drinks" class="py-6 text-sm font-black uppercase tracking-widest text-slate-400 hover:text-blue-600 transition whitespace-nowrap">Beverages & Drinks</button>
+            <button onclick="renderMenu('Desserts')" id="btn-Desserts" class="py-6 text-sm font-black uppercase tracking-widest text-slate-400 hover:text-blue-600 transition whitespace-nowrap">Sweet Desserts</button>
+            <button class="py-6 text-sm font-black uppercase tracking-widest text-slate-400 opacity-30 whitespace-nowrap" disabled>Breakfast (Locked)</button>
+        </section>
+
+        <section class="p-8 lg:p-12">
+            <div class="mb-10 flex items-center justify-between">
+                <div>
+                    <h3 id="display-title" class="text-4xl font-black text-slate-900 italic uppercase leading-none">Mains</h3>
+                    <div class="h-1.5 w-20 bg-blue-600 mt-4 rounded-full"></div>
+                </div>
+                <button class="flex items-center space-x-2 bg-slate-900 text-white px-6 py-3 rounded-2xl font-bold text-sm hover:bg-slate-800 shadow-xl transition active:scale-95">
+                    <span>➕</span> <span>Add Menu Item</span>
+                </button>
+            </div>
+
+            <div id="menu-grid" class="grid grid-cols-1 md:grid-cols-2 2xl:grid-cols-3 gap-8">
+                </div>
+        </section>
+
+        <section class="px-8 pb-12">
+            <div class="bg-slate-900 rounded-[3rem] p-10 flex flex-col md:flex-row justify-between items-center text-white gap-8">
+                <div class="text-center md:text-left">
+                    <p class="text-slate-400 text-xs font-bold uppercase tracking-widest">Section Statistics</p>
+                    <h4 class="text-2xl font-black mt-1">Total Catalog: <span class="text-blue-400">12 Items</span></h4>
+                </div>
+                <div class="flex space-x-4">
+                    <div class="bg-white/10 px-6 py-3 rounded-2xl text-center">
+                        <p class="text-[10px] text-slate-400 uppercase font-bold">Stock</p>
+                        <p class="text-lg font-black">98%</p>
+                    </div>
+                    <div class="bg-white/10 px-6 py-3 rounded-2xl text-center">
+                        <p class="text-[10px] text-slate-400 uppercase font-bold">Variants</p>
+                        <p class="text-lg font-black">24</p>
+                    </div>
+                </div>
+                <button class="px-10 py-4 bg-blue-600 rounded-2xl font-black uppercase text-xs hover:bg-blue-500 transition shadow-2xl">Publish Menu</button>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        // Data Structure following JSON standards
+        const globalDatabase = {
+            Mains: [
+                { id: 101, name: "67 Nuggets", price: "Ksh 150", info: "Go big or go 67.", icon: "🍗", tag: "Bestseller" },
+                { id: 102, name: "67 Burgers", price: "Ksh 250", info: "Double patty nonchalance.", icon: "🍔", tag: "New" },
+                { id: 103, name: "67 Wings (with fries)", price: "Ksh 350", info: "Turn up the heat.", icon: "🍟", tag: "Popular" },
+                { id: 104, name: "67 Grilled Steak", price: "Ksh 850", info: "Prime cut aged beef.", icon: "🥩", tag: "Chef's Choice" }
+            ],
+            Drinks: [
+                { id: 201, name: "67 Iced Lemonade", price: "Ksh 120", info: "Fresh lemon & mint chill.", icon: "🍋", tag: "Cold" },
+                { id: 202, name: "67 Nitro Coffee", price: "Ksh 240", info: "High-octane cold brew.", icon: "☕", tag: "Hot Seller" },
+                { id: 203, name: "67 Fruit Punch", price: "Ksh 180", info: "Mixed tropical fruits.", icon: "🍹", tag: "Fruity" },
+                { id: 204, name: "67 Sparkling Water", price: "Ksh 80", info: "Infinite bubbles.", icon: "🥤", tag: "Fresh" }
+            ],
+            Desserts: [
+                { id: 301, name: "67 Fudge Cake", price: "Ksh 320", info: "Triple chocolate layer.", icon: "🍰", tag: "Sweet" },
+                { id: 302, name: "67 Gelato Scoop", price: "Ksh 150", info: "Madagascar vanilla bean.", icon: "🍦", tag: "Classic" },
+                { id: 303, name: "67 Donut Platter", price: "Ksh 450", info: "Glazed and sprinkled 67.", icon: "🍩", tag: "Shared" },
+                { id: 304, name: "67 Cheesecake", price: "Ksh 380", info: "New York style rich cream.", icon: "🧁", tag: "Premium" }
+            ]
+        };
+
+        function renderMenu(category) {
+            // Update UI State
+            document.getElementById('current-cat').innerText = category;
+            document.getElementById('display-title').innerText = category;
+            
+            // Tab Toggle Styling logic
+            ['Mains', 'Drinks', 'Desserts'].forEach(key => {
+                const btn = document.getElementById('btn-' + key);
+                btn.classList.remove('menu-tab-active', 'text-slate-900');
+                btn.classList.add('text-slate-400');
+                if(key === category) {
